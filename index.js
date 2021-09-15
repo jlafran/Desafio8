@@ -11,8 +11,6 @@ const io=new IOServer(httpServer,{
         origin:'http://localhost:3000'
     }
 })
-
-
 const PORT=8080
 
 app.use(express.json())
@@ -60,10 +58,6 @@ app.get('/',(req,res)=>{
     }
     productostotales()
 })
-async function product(){
-    let productos = await contenedor.getAll()
-    return productos
-}
 
 // Socket Chat
 

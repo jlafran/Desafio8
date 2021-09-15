@@ -1,4 +1,5 @@
 const productRoutes= require('./routes/productRoutes')
+const messagesRoutes= require('./routes/messagesRoutes')
 const express=require("express")
 const emoji= require('node-emoji')
 const {Server : HttpServer} =require('http')
@@ -24,6 +25,7 @@ httpServer.listen(PORT,()=>{
 })
 
 app.use('/productos',productRoutes)
+app.use('/mensajes',messagesRoutes)
 
 //handlebars
 const handlebars=require('express-handlebars')
@@ -43,29 +45,3 @@ app.get('/',(req,res)=>{
     }
     productostotales()
 })
-
-// Socket Chat
-// const { timeStamp } = require("console")
-// io.on('connection',async(socket)=>{
-//     const products= await contenedor.getAll()
-//     const messages= await chats.getAll()
-//     console.log(emoji.get("pizza")," Usuario conectado");
-
-//     socket.emit('messageBackend',messages)
-
-//     socket.emit('ProductsBackend',products)
-    
-//     socket.on('disconnect',()=>{
-//         console.log(emoji.get("fire")," Usuario desconectado"); 
-//     })
-
-//     socket.on('messageFront',(data,mai)=>{
-//         console.log(data,mai);
-//         chats.save({
-//             mail: mai,
-//             fecha: new Date().toLocaleString(),
-//             text:data
-//         })
-//         io.sockets.emit('messageBackend',messages)
-//     })
-// })
