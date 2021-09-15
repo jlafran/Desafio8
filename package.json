@@ -2,9 +2,10 @@
   "name": "ejerciciosclase",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server1": "nodemon --inspect ./src/server1.js",
+    "js5": "nodemon --inspect ./db.js",
     "index": "nodemon --inspect ./index.js"
   },
   "keywords": [],
@@ -15,8 +16,13 @@
     "nodemon": "^2.0.12"
   },
   "dependencies": {
+    "dotenv": "^10.0.0",
+    "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.3",
+    "http": "^0.0.1-security",
+    "knex": "^0.95.11",
+    "mysql2": "^2.3.0",
     "node-emoji": "^1.11.0",
     "socket.io": "^4.1.3"
   },
