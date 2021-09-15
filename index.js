@@ -1,22 +1,17 @@
-import express from 'express'
-import emoji from 'node-emoji'
+const express=require("express")
+const emoji= require('node-emoji')
+const {Server : HttpServer} =require('http')
+const {Server : IOServer}= require('socket.io')
 
-import { createServer } from "http";
-import { Server } from "socket.io";
+const app= express()
+const httpServer= new HttpServer(app)
 
-const httpServer = createServer();
-const io = new Server(httpServer, {
+const io=new IOServer(httpServer,{
     cors:{
         origin:'http://localhost:3000'
     }
 })
 
-import { config } from './configsql.js';
-import knex from 'knex'
-console.log(config)
-const db = knex(config)
-
-const app= express()
 
 const PORT=8080
 
@@ -29,6 +24,10 @@ httpServer.listen(PORT,()=>{
 
 app.use('/public',express.static('./public'))
 
+const Contenedor= require('./src/contenedor.js')
+let contenedor= new Contenedor('./src/productos.json')
+
+let chats= new Contenedor('./src/chats.json')
 
 //guarda el producto
 app.post('/',(req,res)=>{
@@ -41,16 +40,8 @@ app.post('/',(req,res)=>{
 })
 
 //handlebars
-
-
-import handlebars from 'express-handlebars';
-import timeStamp from 'console'
-
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const handlebars=require('express-handlebars')
+const { timeStamp } = require("console")
 
 app.set('view engine','hbs')
 app.engine('hbs', handlebars({
@@ -63,40 +54,39 @@ app.engine('hbs', handlebars({
 //formulario en la ruta raiz
 
 app.get('/',(req,res)=>{
-    // async function productostotales(){
-    //     res.render('bodyForm',{
-    //         layout:'layoutFrame'})
-    // }
-    // productostotales()
-    product()
+    async function productostotales(){
+        res.render('bodyForm',{
+            layout:'layoutFrame'})
+    }
+    productostotales()
 })
 async function product(){
-    const cont = await db.from('contenedor').select('*')
-    return cont
+    let productos = await contenedor.getAll()
+    return productos
 }
 
 // Socket Chat
 
-// io.on('connection',async(socket)=>{
-//     const cont = db.from('contenedor').select('*')
-//     const messages= await chats.getAll()
-//     console.log(emoji.get("pizza")," Usuario conectado");
+io.on('connection',async(socket)=>{
+    const products= await contenedor.getAll()
+    const messages= await chats.getAll()
+    console.log(emoji.get("pizza")," Usuario conectado");
 
-//     socket.emit('messageBackend',messages)
+    socket.emit('messageBackend',messages)
 
-//     socket.emit('ProductsBackend',products)
+    socket.emit('ProductsBackend',products)
     
-//     socket.on('disconnect',()=>{
-//         console.log(emoji.get("fire")," Usuario desconectado"); 
-//     })
+    socket.on('disconnect',()=>{
+        console.log(emoji.get("fire")," Usuario desconectado"); 
+    })
 
-//     socket.on('messageFront',(data,mai)=>{
-//         console.log(data,mai);
-//         chats.save({
-//             mail: mai,
-//             fecha: new Date().toLocaleString(),
-//             text:data
-//         })
-//         io.sockets.emit('messageBackend',messages)
-//     })
-// })
+    socket.on('messageFront',(data,mai)=>{
+        console.log(data,mai);
+        chats.save({
+            mail: mai,
+            fecha: new Date().toLocaleString(),
+            text:data
+        })
+        io.sockets.emit('messageBackend',messages)
+    })
+})

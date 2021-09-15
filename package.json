@@ -1,12 +1,11 @@
 {
   "name": "ejerciciosclase",
   "version": "1.0.0",
-  "main": "index.js",
-  "type": "module",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "js5": "nodemon --inspect ./db.js",
-    "index": "nodemon --inspect ./index.js"
+    "index": "nodemon --inspect ./server.js"
   },
   "keywords": [],
   "author": "",
