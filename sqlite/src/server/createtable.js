@@ -19,5 +19,5 @@ console.log(config);
         } finally{
             knex.destroy()
         }
-    }
+    } 
 )()

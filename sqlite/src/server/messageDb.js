@@ -1,4 +1,4 @@
-const {config}=require('./config.js')
+const {config}=require('./config')
 const knex = require('knex')(config)
 console.log(config);
 
@@ -8,10 +8,11 @@ console.log(config);
             const exist= await knex.schema.hasTable('messages')
             console.log(exist);
             if (!exist){
-                await knex.schema.createTable('messages',table=>{
+                return await knex.schema.createTable('messages',(table)=>{
+                    table.increments('id').primary().notNullable()
                     table.string('user',40).notNullable()
                     table.string('message',150).notNullable()
-                })
+                }).then()
             }
             
         } catch (error) {
